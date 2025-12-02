@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 public class TranslationService {
 
     private final WebClient webClient;
+    private final TranslationMappingService translationMappingService;
 
     @Value("${libretranslate.api.url}")
     private String libreTranslateApiUrl;
@@ -19,12 +20,34 @@ public class TranslationService {
     @Value("${libretranslate.api.key:#{null}}")
     private String libreTranslateApiKey;
 
-    public TranslationService(WebClient webClient) {
+    public TranslationService(WebClient webClient, TranslationMappingService translationMappingService) {
         this.webClient = webClient;
-        System.out.println("TranslationService initialized with WebClient: " + webClient);
+        this.translationMappingService = translationMappingService;
+        System.out.println("TranslationService initialized with WebClient and TranslationMappingService");
     }
 
     public Mono<String> translateText(String text, String sourceLanguage, String targetLanguage) {
+        // Check if we have a curated sentence translation first (for phrases)
+        String curatedTranslation = null;
+        
+        if ("ms".equals(sourceLanguage) && "zh".equals(targetLanguage)) {
+            // Check sentence mapping first, then word mapping
+            curatedTranslation = translationMappingService.getMalaySentenceToMandarin(text);
+            if (curatedTranslation == null) {
+                curatedTranslation = translationMappingService.getMalayToMandarin(text);
+            }
+        } else if ("zh".equals(sourceLanguage) && "ms".equals(targetLanguage)) {
+            // Check sentence mapping first, then word mapping
+            curatedTranslation = translationMappingService.getMandarinSentenceToMalay(text);
+            if (curatedTranslation == null) {
+                curatedTranslation = translationMappingService.getMalayFromMandarin(text);
+            }
+        }
+        
+        if (curatedTranslation != null) {
+            System.out.println("Using curated translation: '" + text + "' → '" + curatedTranslation + "'");
+            return Mono.just(curatedTranslation);
+        }
         // Create LibreTranslate request with proper field names
         LibreTranslateRequest request = new LibreTranslateRequest(text, sourceLanguage, targetLanguage);
 

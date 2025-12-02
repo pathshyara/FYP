@@ -36,40 +36,64 @@ public class EnhancedDeepseekAiService extends DeepseekAiService {
         // Post-process the response based on specific words
         switch (lowercaseWord) {
             case "layu":
+            case "枯萎":  // Chinese equivalent
                 response = response.map(this::enhanceLayu);
                 break;
             case "gerun":
+            case "害怕":  // Chinese equivalent
                 response = response.map(this::enhanceGerun);
                 break;
             case "cantik":
+            case "美丽":  // Chinese equivalent
                 response = response.map(this::enhanceCantik);
                 break;
             case "pintar":
+            case "聪明":  // Chinese equivalent
                 response = response.map(this::enhancePintar);
                 break;
             case "cepat":
+            case "快":  // Chinese equivalent
                 response = response.map(this::enhanceCepat);
                 break;
             case "lambat":
+            case "慢":  // Chinese equivalent
                 response = response.map(this::enhanceLambat);
                 break;
             case "tinggi":
+            case "高":  // Chinese equivalent
                 response = response.map(this::enhanceTinggi);
                 break;
             case "pendek":
+            case "矮":  // Chinese equivalent
                 response = response.map(this::enhancePendek);
                 break;
             case "baik":
+            case "好":  // Chinese equivalent
                 response = response.map(this::enhanceBaik);
                 break;
             case "marah":
+            case "生气":  // Chinese equivalent
                 response = response.map(this::enhanceMarah);
                 break;
             case "gembira":
+            case "快乐":  // Chinese equivalent
                 response = response.map(this::enhanceGembira);
                 break;
             case "sedih":
+            case "伤心":  // Chinese equivalent
+            case "悲伤":  // Alternative Chinese
                 response = response.map(this::enhanceSedih);
+                break;
+            case "bulat":
+            case "圆形":  // Chinese equivalent
+                response = response.map(this::enhanceBulat);
+                break;
+            case "bujur":
+            case "椭圆形":  // Chinese equivalent
+                response = response.map(this::enhanceBujur);
+                break;
+            case "浪费":  // Chinese word
+                response = response.map(this::enhanceLangfei);
                 break;
         }
 
@@ -80,31 +104,18 @@ public class EnhancedDeepseekAiService extends DeepseekAiService {
      * Enhance the response for "layu" (withered/wilted)
      */
     private AiResponse enhanceLayu(AiResponse response) {
-        if (response.getExplanation().contains("No explanation available") ||
-                response.getPronunciation().contains("No pronunciation available")) {
+        logger.info("Enhancing translation for word 'layu' / 枯萎");
 
-            logger.info("Enhancing translation for word 'layu'");
-
-            // Provide a better pronunciation
-            response.setPronunciation("kū wěi");
-
-            // Only override if missing
-            if (response.getExplanation().contains("No explanation available")) {
-                response.setExplanation(
-                        "'枯萎' dalam bahasa Mandarin menggambarkan keadaan tumbuhan yang kehilangan kesegaran dan kecergasan, menjadi kering dan layu. Ia biasanya digunakan untuk menggambarkan bunga, daun, atau sayuran yang mulai kering dan tidak segar lagi.");
-            }
-
-            // Only override if missing
-            if (response.getExamples().contains("No examples available")) {
-                response.setExamples(
-                        "1. 花朵因缺水而枯萎了。\n" +
-                                "   Bunga itu layu kerana kekurangan air.\n" +
-                                "2. 不要让植物在阳光下枯萎。\n" +
-                                "   Jangan biarkan tumbuhan layu di bawah cahaya matahari.\n" +
-                                "3. 这些蔬菜已经开始枯萎了。\n" +
-                                "   Sayur-sayuran ini sudah mula layu.");
-            }
-        }
+        response.setPronunciation("kū wěi");
+        response.setExplanation(
+                "枯萎 bermaksud layu atau melayu. Ia menggambarkan keadaan tumbuhan yang telah kehilangan kesegaran dan menjadi kering serta tidak segar lagi.");
+        response.setExamples(
+                "1. 花朵因缺水而枯萎了。\n" +
+                        "   Bunga itu layu kerana kekurangan air.\n" +
+                        "2. 不要让植物在阳光下枯萎。\n" +
+                        "   Jangan biarkan tumbuhan layu di bawah cahaya matahari.\n" +
+                        "3. 这些蔬菜已经开始枯萎了。\n" +
+                        "   Sayur-sayuran ini sudah mula layu.");
         return response;
     }
 
@@ -112,31 +123,18 @@ public class EnhancedDeepseekAiService extends DeepseekAiService {
      * Enhance the response for "gerun" (afraid/fearful)
      */
     private AiResponse enhanceGerun(AiResponse response) {
-        if (response.getExplanation().contains("No explanation available") ||
-                response.getPronunciation().contains("No pronunciation available")) {
+        logger.info("Enhancing translation for word 'gerun' / 害怕");
 
-            logger.info("Enhancing translation for word 'gerun'");
-
-            // Provide a better pronunciation
-            response.setPronunciation("hài pà");
-
-            // Only override if missing
-            if (response.getExplanation().contains("No explanation available")) {
-                response.setExplanation(
-                        "'害怕' dalam bahasa Mandarin bermaksud perasaan takut atau cemas terhadap sesuatu. Ia adalah satu perasaan ketakutan atau kekhuatiran yang dialami apabila seseorang menghadapi sesuatu yang dianggap sebagai ancaman atau bahaya.");
-            }
-
-            // Only override if missing
-            if (response.getExamples().contains("No examples available")) {
-                response.setExamples(
-                        "1. 孩子害怕黑暗。\n" +
-                                "   Kanak-kanak gerun akan kegelapan.\n" +
-                                "2. 他对高处感到害怕。\n" +
-                                "   Dia berasa gerun terhadap tempat tinggi.\n" +
-                                "3. 不要害怕尝试新事物。\n" +
-                                "   Jangan gerun untuk mencuba perkara baru.");
-            }
-        }
+        response.setPronunciation("hài pà");
+        response.setExplanation(
+                "害怕 bermaksud gerun atau takut. Ia menggambarkan emosi ketakutan atau kebimbangan yang dirasai seseorang ketika menghadapi sesuatu yang menakutkan atau berbahaya.");
+        response.setExamples(
+                "1. 孩子害怕黑暗。\n" +
+                        "   Kanak-kanak gerun akan kegelapan.\n" +
+                        "2. 他对高处感到害怕。\n" +
+                        "   Dia berasa gerun terhadap tempat tinggi.\n" +
+                        "3. 不要害怕尝试新事物。\n" +
+                        "   Jangan gerun untuk mencuba perkara baru.");
         return response;
     }
 
@@ -144,29 +142,19 @@ public class EnhancedDeepseekAiService extends DeepseekAiService {
      * Enhance the response for "cantik" (beautiful)
      */
     private AiResponse enhanceCantik(AiResponse response) {
-        // Only enhance if there are issues with the response
-        if (isResponseIncomplete(response)) {
-            logger.info("Enhancing translation for word 'cantik'");
+        logger.info("Enhancing translation for word 'cantik' / 美丽");
 
-            response.setPronunciation("měi lì");
-
-            if (response.getExplanation().contains("No explanation available")) {
-                response.setExplanation(
-                        "'美丽' dalam bahasa Mandarin merujuk kepada sesuatu yang indah atau menarik dari segi penampilan. Ia digunakan untuk menggambarkan keindahan fizikal seseorang, pemandangan, atau objek yang menimbulkan rasa kagum dan kegembiraan bila dipandang.");
-            }
-
-            if (response.getExamples().contains("No examples available")) {
-                response.setExamples(
-                        "1. 她是个美丽的女孩。\n" +
-                                "   Dia seorang gadis yang cantik.\n" +
-                                "2. 这里的风景非常美丽。\n" +
-                                "   Pemandangan di sini sangat cantik.\n" +
-                                "3. 那朵花开得很美丽。\n" +
-                                "   Bunga itu mekar dengan cantiknya.");
-            }
-
-            response.setAdjective(true);
-        }
+        response.setPronunciation("měi lì");
+        response.setExplanation(
+                "美丽 bermaksud cantik atau menarik perhatian. Ia menggambarkan sesuatu yang indah atau mempunyai keindahan dari segi penampilan, seperti seorang gadis yang cantik atau pemandangan yang indah.");
+        response.setExamples(
+                "1. 她是个美丽的女孩。\n" +
+                        "   Dia seorang gadis yang cantik.\n" +
+                        "2. 这里的风景非常美丽。\n" +
+                        "   Pemandangan di sini sangat cantik.\n" +
+                        "3. 那朵花开得很美丽。\n" +
+                        "   Bunga itu mekar dengan cantiknya.");
+        response.setAdjective(true);
         return response;
     }
 
@@ -174,29 +162,19 @@ public class EnhancedDeepseekAiService extends DeepseekAiService {
      * Enhance the response for "pintar" (smart)
      */
     private AiResponse enhancePintar(AiResponse response) {
-        // Only enhance if there are issues with the response
-        if (isResponseIncomplete(response)) {
-            logger.info("Enhancing translation for word 'pintar'");
+        logger.info("Enhancing translation for word 'pintar' / 聪明");
 
-            response.setPronunciation("cōng míng");
-
-            if (response.getExplanation().contains("No explanation available")) {
-                response.setExplanation(
-                        "'聪明' dalam bahasa Mandarin bermaksud mempunyai kemampuan mental yang baik, cerdas, atau bijak. Ia menggambarkan seseorang yang dapat memahami dan mempelajari sesuatu dengan cepat dan menyelesaikan masalah dengan efektif.");
-            }
-
-            if (response.getExamples().contains("No examples available")) {
-                response.setExamples(
-                        "1. 她是班上最聪明的学生。\n" +
-                                "   Dia pelajar paling pintar dalam kelasnya.\n" +
-                                "2. 这个孩子非常聪明，学东西很快。\n" +
-                                "   Anak ini sangat pintar, dia cepat belajar.\n" +
-                                "3. 你必须聪明地解决这个问题。\n" +
-                                "   Anda mesti menyelesaikan masalah ini dengan cara yang pintar.");
-            }
-
-            response.setAdjective(true);
-        }
+        response.setPronunciation("cōngmíng");
+        response.setExplanation(
+                "聪明 bermaksud pintar atau bijak. Ia menggambarkan seseorang yang mempunyai kebolehan mental yang baik, dapat memahami dan mempelajari sesuatu dengan cepat serta menyelesaikan masalah dengan efektif.");
+        response.setExamples(
+                "1. 她是班上最聪明的学生。\n" +
+                        "   Dia pelajar paling pintar dalam kelasnya.\n" +
+                        "2. 这个孩子非常聪明，学东西很快。\n" +
+                        "   Anak ini sangat pintar, dia cepat belajar.\n" +
+                        "3. 你必须聪明地解决这个问题。\n" +
+                        "   Anda mesti menyelesaikan masalah ini dengan cara yang pintar.");
+        response.setAdjective(true);
         return response;
     }
 
@@ -324,29 +302,19 @@ public class EnhancedDeepseekAiService extends DeepseekAiService {
      * Enhance the response for "baik" (good/kind)
      */
     private AiResponse enhanceBaik(AiResponse response) {
-        // Only enhance if there are issues with the response
-        if (isResponseIncomplete(response)) {
-            logger.info("Enhancing translation for word 'baik'");
+        logger.info("Enhancing translation for word 'baik' / 好");
 
-            response.setPronunciation("hǎo");
-
-            if (response.getExplanation().contains("No explanation available")) {
-                response.setExplanation(
-                        "'好' dalam bahasa Mandarin bermaksud bagus, memuaskan, atau memiliki kualiti yang tinggi. Ia juga boleh bermakna bersikap baik atau bersopan santun. Dalam konteks manusia, ia boleh merujuk kepada seseorang yang berbudi pekerti tinggi atau mempunyai moral yang baik.");
-            }
-
-            if (response.getExamples().contains("No examples available")) {
-                response.setExamples(
-                        "1. 他是个好人。\n" +
-                                "   Dia seorang yang baik.\n" +
-                                "2. 这个电影很好看。\n" +
-                                "   Filem ini sangat baik untuk ditonton.\n" +
-                                "3. 祝你有个好心情。\n" +
-                                "   Semoga anda mempunyai perasaan yang baik.");
-            }
-
-            response.setAdjective(true);
-        }
+        response.setPronunciation("hǎo");
+        response.setExplanation(
+                "好 bermaksud baik atau bagus, memuaskan atau mempunyai kualiti yang tinggi. Ia juga boleh bermakna bersikap baik atau bersopan santun dalam konteks tingkah laku seseorang.");
+        response.setExamples(
+                "好 (good):\n" +
+                        "好人 - orang baik (good person)\n" +
+                        "好东西 - perkara baik (good thing)\n" +
+                        "好朋友 - teman baik (good friend)\n" +
+                        "好天气 - cuaca baik (good weather)\n" +
+                        "好日子 - hari baik (good day)");
+        response.setAdjective(true);
         return response;
     }
 
@@ -354,29 +322,19 @@ public class EnhancedDeepseekAiService extends DeepseekAiService {
      * Enhance the response for "marah" (angry)
      */
     private AiResponse enhanceMarah(AiResponse response) {
-        // Only enhance if there are issues with the response
-        if (isResponseIncomplete(response)) {
-            logger.info("Enhancing translation for word 'marah'");
+        logger.info("Enhancing translation for word 'marah' / 生气");
 
-            response.setPronunciation("shēng qì");
-
-            if (response.getExplanation().contains("No explanation available")) {
-                response.setExplanation(
-                        "'生气' dalam bahasa Mandarin bermaksud perasaan tidak senang atau tersinggung yang kuat, yang biasanya diikuti oleh kemarahan atau ketidakpuasan. Ia menggambarkan emosi di mana seseorang itu rasa tidak puas hati atau kesal terhadap sesuatu.");
-            }
-
-            if (response.getExamples().contains("No examples available")) {
-                response.setExamples(
-                        "1. 他对我生气了。\n" +
-                                "   Dia marah kepada saya.\n" +
-                                "2. 别生气，这不是你的错。\n" +
-                                "   Jangan marah, ini bukan salah kamu.\n" +
-                                "3. 她很容易生气。\n" +
-                                "   Dia mudah marah.");
-            }
-
-            response.setAdjective(false);
-        }
+        response.setPronunciation("shēng qì");
+        response.setExplanation(
+                "生气 bermaksud marah atau berang. Ia menggambarkan perasaan tidak senang atau tersinggung yang kuat, biasanya diikuti oleh kemarahan atau ketidakpuasan terhadap sesuatu.");
+        response.setExamples(
+                "1. 他对我生气了。\n" +
+                        "   Dia marah kepada saya.\n" +
+                        "2. 别生气，这不是你的错。\n" +
+                        "   Jangan marah, ini bukan salah kamu.\n" +
+                        "3. 她很容易生气。\n" +
+                        "   Dia mudah marah.");
+        response.setAdjective(false);
         return response;
     }
 
@@ -384,29 +342,19 @@ public class EnhancedDeepseekAiService extends DeepseekAiService {
      * Enhance the response for "gembira" (happy)
      */
     private AiResponse enhanceGembira(AiResponse response) {
-        // Only enhance if there are issues with the response
-        if (isResponseIncomplete(response)) {
-            logger.info("Enhancing translation for word 'gembira'");
+        logger.info("Enhancing translation for word 'gembira' / 快乐");
 
-            response.setPronunciation("kuài lè");
-
-            if (response.getExplanation().contains("No explanation available")) {
-                response.setExplanation(
-                        "'快乐' dalam bahasa Mandarin merujuk kepada perasaan kegembiraan, kesenangan, atau kepuasan. Ia menggambarkan emosi positif yang dirasai apabila seseorang itu berpuas hati atau gembira dengan keadaan semasa.");
-            }
-
-            if (response.getExamples().contains("No examples available")) {
-                response.setExamples(
-                        "1. 他总是很快乐。\n" +
-                                "   Dia sentiasa sangat gembira.\n" +
-                                "2. 祝你生日快乐。\n" +
-                                "   Selamat hari jadi, semoga gembira.\n" +
-                                "3. 我们快乐地度过了假期。\n" +
-                                "   Kami telah menghabiskan cuti dengan gembira.");
-            }
-
-            response.setAdjective(true);
-        }
+        response.setPronunciation("kuài lè");
+        response.setExplanation(
+                "快乐 bermaksud gembira atau bahagia. Ia menggambarkan perasaan kegembiraan, kesenangan atau kepuasan yang dirasai apabila seseorang berpuas hati dengan keadaan semasa.");
+        response.setExamples(
+                "1. 他总是很快乐。\n" +
+                        "   Dia sentiasa sangat gembira.\n" +
+                        "2. 祝你生日快乐。\n" +
+                        "   Selamat hari jadi, semoga gembira.\n" +
+                        "3. 我们快乐地度过了假期。\n" +
+                        "   Kami telah menghabiskan cuti dengan gembira.");
+        response.setAdjective(true);
         return response;
     }
 
@@ -414,29 +362,79 @@ public class EnhancedDeepseekAiService extends DeepseekAiService {
      * Enhance the response for "sedih" (sad)
      */
     private AiResponse enhanceSedih(AiResponse response) {
-        // Only enhance if there are issues with the response
-        if (isResponseIncomplete(response)) {
-            logger.info("Enhancing translation for word 'sedih'");
+        logger.info("Enhancing translation for word 'sedih' / 伤心");
 
-            response.setPronunciation("bēi shāng");
+        response.setPronunciation("shāng xīn");
+        response.setExplanation(
+                "伤心 bermaksud sedih atau dukacita. Ia menggambarkan emosi negatif yang dirasai apabila seseorang mengalami kehilangan, kekecewaan atau situasi yang menyedihkan.");
+        response.setExamples(
+                "1. 听到这个消息，他感到非常悲伤。\n" +
+                        "   Setelah mendengar berita itu, dia berasa sedih.\n" +
+                        "2. 电影的结局很悲伤。\n" +
+                        "   Pengakhiran filem itu sangat sedih.\n" +
+                        "3. 她的眼睛里充满了悲伤。\n" +
+                        "   Dia berasa sedih melihat situasi itu.");
+        response.setAdjective(true);
+        return response;
+    }
 
-            if (response.getExplanation().contains("No explanation available")) {
-                response.setExplanation(
-                        "'悲伤' dalam bahasa Mandarin bermaksud perasaan sedih, dukacita, atau kesedihan. Ia menggambarkan emosi negatif yang dirasai apabila seseorang mengalami kehilangan, kekecewaan, atau situasi yang menyedihkan.");
-            }
+    /**
+     * Enhance the response for "bulat" (round)
+     */
+    private AiResponse enhanceBulat(AiResponse response) {
+        logger.info("Enhancing translation for word 'bulat' / 圆形");
 
-            if (response.getExamples().contains("No examples available")) {
-                response.setExamples(
-                        "1. 听到这个消息，他感到非常悲伤。\n" +
-                                "   Setelah mendengar berita itu, dia berasa sangat sedih.\n" +
-                                "2. 电影的结局很悲伤。\n" +
-                                "   Pengakhiran filem itu sangat sedih.\n" +
-                                "3. 她的眼睛里充满了悲伤。\n" +
-                                "   Matanya dipenuhi dengan kesedihan.");
-            }
+        response.setPronunciation("yuán xíng");
+        response.setExplanation(
+                "圆形 bermaksud bulat atau berbentuk bulatan. Ia menggambarkan sesuatu objek yang tidak mempunyai sudut tajam, dengan perimeter yang halus dan seragam dari pusat ke tepi.");
+        response.setExamples(
+                "1. 这个球是圆形的。\n" +
+                        "   Bola ini adalah berbentuk bulat.\n" +
+                        "2. 月亮是圆形的。\n" +
+                        "   Bulan adalah berbentuk bulat.\n" +
+                        "3. 这张桌子有一个圆形的表面。\n" +
+                        "   Meja ini mempunyai permukaan berbentuk bulat.");
+        response.setAdjective(true);
+        return response;
+    }
 
-            response.setAdjective(true);
-        }
+    /**
+     * Enhance the response for "bujur" (oblong/elliptical)
+     */
+    private AiResponse enhanceBujur(AiResponse response) {
+        logger.info("Enhancing translation for word 'bujur' / 椭圆形");
+
+        response.setPronunciation("Tuǒyuán xíng");
+        response.setExplanation(
+                "椭圆形 bermaksud bujur atau berbentuk lonjong. Ia adalah bentuk yang menyerupai bulatan tetapi lebih panjang di satu arah, dengan perimeter yang halus dan melengkung secara konsisten.");
+        response.setExamples(
+                "1. 这个橄榄球是椭圆形的。\n" +
+                        "   Bola ragbi ini adalah berbentuk bujur.\n" +
+                        "2. 地球的形状接近椭圆形。\n" +
+                        "   Bentuk bumi hampir menyerupai bentuk bujur.\n" +
+                        "3. 这个盘子是椭圆形的。\n" +
+                        "   Piring ini mempunyai bentuk bujur.");
+        response.setAdjective(true);
+        return response;
+    }
+
+    /**
+     * Enhance the response for "浪费" (wasteful/wasting)
+     */
+    private AiResponse enhanceLangfei(AiResponse response) {
+        logger.info("Enhancing translation for word '浪费'");
+
+        response.setPronunciation("làngfèi");
+        response.setExplanation(
+                "浪费 bermaksud membazir atau menggunakan sesuatu dengan tidak bertanggungjawab. Ia menggambarkan tindakan membuang atau menggunakan sumber daya dengan berlebihan dan tidak perlu.");
+        response.setExamples(
+                "1. 不要浪费食物。\n" +
+                        "   Jangan membazir makanan.\n" +
+                        "2. 浪费时间是很不好的。\n" +
+                        "   Membazir masa adalah sangat tidak baik.\n" +
+                        "3. 我们应该避免浪费资源。\n" +
+                        "   Kita harus mengelak membazir sumber daya.");
+        response.setAdjective(true);
         return response;
     }
 

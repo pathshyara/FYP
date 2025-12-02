@@ -48,6 +48,31 @@ public class PinyinService {
         CHARACTER_PINYIN.put("萎", "wěi");
         CHARACTER_PINYIN.put("忧", "yōu");
         CHARACTER_PINYIN.put("郁", "yù");
+        CHARACTER_PINYIN.put("学", "xué");
+        CHARACTER_PINYIN.put("习", "xí");
+        CHARACTER_PINYIN.put("真", "zhēn");
+        CHARACTER_PINYIN.put("有", "yǒu");
+        CHARACTER_PINYIN.put("趣", "qù");
+        CHARACTER_PINYIN.put("观", "guān");
+        CHARACTER_PINYIN.put("点", "diǎn");
+        CHARACTER_PINYIN.put("看", "kàn");
+        CHARACTER_PINYIN.put("的", "de");
+        CHARACTER_PINYIN.put("是", "shì");
+        CHARACTER_PINYIN.put("一", "yī");
+        CHARACTER_PINYIN.put("在", "zài");
+        CHARACTER_PINYIN.put("冷", "lěng");
+        CHARACTER_PINYIN.put("京", "jīng");
+        CHARACTER_PINYIN.put("快", "kuài");
+        CHARACTER_PINYIN.put("乐", "lè");
+        CHARACTER_PINYIN.put("凉", "liáng");
+        CHARACTER_PINYIN.put("伤", "shāng");
+        CHARACTER_PINYIN.put("心", "xīn");
+        CHARACTER_PINYIN.put("开", "kāi");
+        CHARACTER_PINYIN.put("生", "shēng");
+        CHARACTER_PINYIN.put("气", "qì");
+        CHARACTER_PINYIN.put("爱", "ài");
+        CHARACTER_PINYIN.put("想", "xiǎng");
+        CHARACTER_PINYIN.put("念", "niàn");
         
         // Additional common characters for other words
         CHARACTER_PINYIN.put("我", "wǒ");
@@ -173,6 +198,8 @@ public class PinyinService {
         CHARACTER_PINYIN.put("软", "ruǎn");
         CHARACTER_PINYIN.put("硬", "yìng");
         CHARACTER_PINYIN.put("滑", "huá");
+        CHARACTER_PINYIN.put("浪", "làng");
+        CHARACTER_PINYIN.put("费", "fèi");
         CHARACTER_PINYIN.put("粗", "cū");
         CHARACTER_PINYIN.put("细", "xì");
         CHARACTER_PINYIN.put("光", "guāng");
@@ -315,6 +342,37 @@ public class PinyinService {
         WORD_PINYIN_MAPPING.put("gerun", "hài pà");
         WORD_PINYIN_MAPPING.put("layu", "kū wěi");
         WORD_PINYIN_MAPPING.put("muram", "yōu yù");
+        WORD_PINYIN_MAPPING.put("dingin", "lěng");
+        WORD_PINYIN_MAPPING.put("kelajar", "xué xí");
+        WORD_PINYIN_MAPPING.put("belajar", "xué xí");
+        WORD_PINYIN_MAPPING.put("gembira", "kuài lè");
+        WORD_PINYIN_MAPPING.put("sedih", "shāng xīn");
+        WORD_PINYIN_MAPPING.put("marah", "shēng qì");
+        WORD_PINYIN_MAPPING.put("cinta", "ài");
+        WORD_PINYIN_MAPPING.put("rindu", "xiǎng niàn");
+        WORD_PINYIN_MAPPING.put("bulat", "yuán xíng");
+        WORD_PINYIN_MAPPING.put("bujur", "Tuǒyuán xíng");
+        
+        // Chinese words to pinyin (for when looking up Chinese characters)
+        WORD_PINYIN_MAPPING.put("开心", "kāi xīn");
+        WORD_PINYIN_MAPPING.put("伤心", "shāng xīn");
+        WORD_PINYIN_MAPPING.put("生气", "shēng qì");
+        WORD_PINYIN_MAPPING.put("爱", "ài");
+        WORD_PINYIN_MAPPING.put("想念", "xiǎng niàn");
+        WORD_PINYIN_MAPPING.put("聪明", "cōngmíng");
+        WORD_PINYIN_MAPPING.put("美丽", "měi lì");
+        WORD_PINYIN_MAPPING.put("害怕", "hài pà");
+        WORD_PINYIN_MAPPING.put("快乐", "kuài lè");
+        WORD_PINYIN_MAPPING.put("快", "kuài");
+        WORD_PINYIN_MAPPING.put("慢", "màn");
+        WORD_PINYIN_MAPPING.put("高", "gāo");
+        WORD_PINYIN_MAPPING.put("矮", "ǎi");
+        WORD_PINYIN_MAPPING.put("好", "hǎo");
+        WORD_PINYIN_MAPPING.put("枯萎", "kū wěi");
+        WORD_PINYIN_MAPPING.put("圆形", "yuán xíng");
+        WORD_PINYIN_MAPPING.put("椭圆形", "Tuǒyuán xíng");
+        WORD_PINYIN_MAPPING.put("浪费", "làngfèi");
+        
         WORD_PINYIN_MAPPING.put("saya", "wǒ");
         WORD_PINYIN_MAPPING.put("anda", "nǐ");
         WORD_PINYIN_MAPPING.put("dia", "tā");
@@ -343,7 +401,7 @@ public class PinyinService {
         WORD_PINYIN_MAPPING.put("angin", "fēng");
         WORD_PINYIN_MAPPING.put("tanah", "tǔ");
         WORD_PINYIN_MAPPING.put("rumah", "fáng");
-        WORD_PINYIN_MAPPING.put("sekolah", "xuéx iào");
+        WORD_PINYIN_MAPPING.put("sekolah", "xuéxiào");
         WORD_PINYIN_MAPPING.put("kota", "chéng");
         WORD_PINYIN_MAPPING.put("kampung", "cūn");
         WORD_PINYIN_MAPPING.put("jalan", "lù");
@@ -392,7 +450,7 @@ public class PinyinService {
         WORD_PINYIN_MAPPING.put("bermain", "wán");
         WORD_PINYIN_MAPPING.put("bekerja", "gōng zuò");
         WORD_PINYIN_MAPPING.put("istirahat", "xiū xi");
-        WORD_PINYIN_MAPPING.put("belajar", "xué xi");
+        WORD_PINYIN_MAPPING.put("istirahat", "xiū xi");
         WORD_PINYIN_MAPPING.put("mengajar", "jiāo shū");
         WORD_PINYIN_MAPPING.put("membaca", "dú shū");
         WORD_PINYIN_MAPPING.put("menulis", "xiě zì");
