@@ -46,6 +46,13 @@ public class TranslationMappingService {
         MALAY_TO_MANDARIN.put("jahat", "坏");
         MALAY_TO_MANDARIN.put("bulat", "圆形");
         MALAY_TO_MANDARIN.put("bujur", "椭圆形");
+        MALAY_TO_MANDARIN.put("buncit", "肚子大");
+        MALAY_TO_MANDARIN.put("busuk", "臭");
+        MALAY_TO_MANDARIN.put("cair", "融化");
+        MALAY_TO_MANDARIN.put("berani", "勇敢");
+        MALAY_TO_MANDARIN.put("zalim", "残忍");
+        MALAY_TO_MANDARIN.put("kejam", "残酷");
+        MALAY_TO_MANDARIN.put("sedap", "美味");
         
         // Common verbs
         MALAY_TO_MANDARIN.put("makan", "吃");

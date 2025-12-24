@@ -13,6 +13,8 @@ import reactor.core.publisher.Mono;
 /**
  * Enhanced DeepSeekAiService that overrides specific word translations
  * for better handling of common Malay words.
+ * 
+ * NOTE: @Primary annotation enabled to use enhanced translations
  */
 @Service
 @Profile("dev")
@@ -334,7 +336,7 @@ public class EnhancedDeepseekAiService extends DeepseekAiService {
                         "   Jangan marah, ini bukan salah kamu.\n" +
                         "3. 她很容易生气。\n" +
                         "   Dia mudah marah.");
-        response.setAdjective(false);
+        response.setAdjective(true);
         return response;
     }
 

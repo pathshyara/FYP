@@ -9,15 +9,34 @@ public class DictionaryService {
 
     private final TranslationService translationService;
     private final DeepseekAiService deepseekAiService;
+    private final DictionaryEntryService dictionaryEntryService;
 
     public DictionaryService(TranslationService translationService,
-            DeepseekAiService deepseekAiService) {
+            DeepseekAiService deepseekAiService,
+            DictionaryEntryService dictionaryEntryService) {
         this.translationService = translationService;
         this.deepseekAiService = deepseekAiService;
+        this.dictionaryEntryService = dictionaryEntryService;
     }
 
     public Mono<DictionaryResponse> processWord(String malayWord) {
         System.out.println("Processing word: " + malayWord);
+
+        // First check if we have a complete curated entry
+        if (dictionaryEntryService.hasEntry(malayWord)) {
+            System.out.println("Found complete curated entry for: " + malayWord);
+            DictionaryEntryService.DictionaryEntry curatedEntry = dictionaryEntryService.getEntryByMalayWord(malayWord);
+            DictionaryResponse response = dictionaryEntryService.convertToDictionaryResponse(curatedEntry, true);
+            System.out.println("Returning complete curated response for: " + malayWord);
+            return Mono.just(response);
+        }
+
+        // Check for pronunciation and adjective overrides (for AI-generated content)
+        final String pronunciationOverride = dictionaryEntryService.getPronunciationOverride(malayWord);
+        final Boolean adjectiveOverride = dictionaryEntryService.getAdjectiveOverride(malayWord);
+
+        System.out.println("Pronunciation override: " + pronunciationOverride);
+        System.out.println("Adjective override: " + adjectiveOverride);
 
         // Detect if input is Chinese (Mandarin) using regex for Chinese characters
         boolean isChinese = malayWord.matches(".*[\\u4E00-\\u9FFF].*");
@@ -43,23 +62,33 @@ public class DictionaryService {
                         response.setExplanation(aiResponse.getExplanation());
                         response.setExamples(aiResponse.getExamples());
 
-                        // Add the pinyin pronunciation from the AI response
-                        String pronunciation = aiResponse.getPronunciation();
-                        if (pronunciation == null || pronunciation.isEmpty()) {
-                            response.setPinyin("No pronunciation available");
+                        // Use pronunciation override if available, otherwise use AI
+                        if (pronunciationOverride != null) {
+                            response.setPinyin(pronunciationOverride);
+                            System.out.println("Using pronunciation override: " + pronunciationOverride);
                         } else {
-                            response.setPinyin(pronunciation);
+                            String pronunciation = aiResponse.getPronunciation();
+                            if (pronunciation == null || pronunciation.isEmpty()) {
+                                response.setPinyin("No pronunciation available");
+                            } else {
+                                response.setPinyin(pronunciation);
+                            }
                         }
 
-                        // Set if the word is an adjective
-                        response.setAdjective(aiResponse.isAdjective());
+                        // Use adjective override if available, otherwise use AI
+                        if (adjectiveOverride != null) {
+                            response.setAdjective(adjectiveOverride);
+                            System.out.println("Using adjective override: " + adjectiveOverride);
+                        } else {
+                            response.setAdjective(aiResponse.isAdjective());
+                        }
 
                         return response;
                     });
         } else {
             // If it's Malay, translate to Chinese first
             System.out.println("Input is Malay, translating: " + malayWord);
-            result = translationService.translateText(malayWord, "ms", "zh") // "ms" for Malay, "zh" for Simplified Mandarin
+            result = translationService.translateText(malayWord, "ms", "zh")
                     .flatMap(mandarinWord -> {
                         System.out.println("Translation successful: '" + malayWord + "' → '" + mandarinWord + "'");
                         System.out.println("Calling DeepseekAiService for '" + mandarinWord + "'");
@@ -80,16 +109,26 @@ public class DictionaryService {
                                     response.setExplanation(aiResponse.getExplanation());
                                     response.setExamples(aiResponse.getExamples());
 
-                                    // Add the pinyin pronunciation from the AI response
-                                    String pronunciation = aiResponse.getPronunciation();
-                                    if (pronunciation == null || pronunciation.isEmpty()) {
-                                        response.setPinyin("No pronunciation available");
+                                    // Use pronunciation override if available, otherwise use AI
+                                    if (pronunciationOverride != null) {
+                                        response.setPinyin(pronunciationOverride);
+                                        System.out.println("Using pronunciation override: " + pronunciationOverride);
                                     } else {
-                                        response.setPinyin(pronunciation);
+                                        String pronunciation = aiResponse.getPronunciation();
+                                        if (pronunciation == null || pronunciation.isEmpty()) {
+                                            response.setPinyin("No pronunciation available");
+                                        } else {
+                                            response.setPinyin(pronunciation);
+                                        }
                                     }
 
-                                    // Set if the word is an adjective
-                                    response.setAdjective(aiResponse.isAdjective());
+                                    // Use adjective override if available, otherwise use AI
+                                    if (adjectiveOverride != null) {
+                                        response.setAdjective(adjectiveOverride);
+                                        System.out.println("Using adjective override: " + adjectiveOverride);
+                                    } else {
+                                        response.setAdjective(aiResponse.isAdjective());
+                                    }
 
                                     return response;
                                 });

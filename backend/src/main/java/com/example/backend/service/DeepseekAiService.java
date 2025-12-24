@@ -209,6 +209,16 @@ public class DeepseekAiService {
             additionalContext = "Note that 'layu' is a Malay word meaning 'withered/wilted' (枯萎 in Chinese, pronounced 'kū wěi'). It specifically describes plants that have lost freshness and are drooping.";
         } else if (lowercaseWord.equals("gerun")) {
             additionalContext = "Note that 'gerun' is a Malay word meaning 'afraid/fearful' (害怕 in Chinese, pronounced 'hài pà').";
+        } else if (lowercaseWord.equals("勇敢")) {
+            additionalContext = "This means 'brave/courageous'. It is an adjective. Pronunciation: yǒnggǎn. Provide clear Malay explanation and examples showing bravery in context.";
+        } else if (lowercaseWord.equals("融化")) {
+            additionalContext = "This means 'to melt/to dissolve'. It is a VERB, NOT an adjective. Pronunciation: rónghuà. Provide clear Malay explanation with action examples showing melting or dissolving.";
+        } else if (lowercaseWord.equals("残酷")) {
+            additionalContext = "This means 'cruel/brutal'. It is an adjective. Pronunciation: cánkù. Provide Malay explanation and examples showing cruel behavior. Make sure Malay translations are natural and accurate.";
+        } else if (lowercaseWord.equals("残忍")) {
+            additionalContext = "This means 'cruel/heartless/brutal'. It is an adjective. Pronunciation: cánrěn. Provide Malay explanation and examples showing cruelty. Ensure examples in both Chinese and Malay are natural and match the word meaning.";
+        } else if (lowercaseWord.equals("美味")) {
+            additionalContext = "This means 'delicious/tasty'. It is an adjective. Pronunciation: měiwèi. Provide Malay explanation and examples showing delicious food or taste. Make examples natural and relatable.";
         }
 
         return String.format(
@@ -220,19 +230,31 @@ public class DeepseekAiService {
                         +
                         "Please provide a comprehensive explanation of the %s word '%s'. %s\n" +
                         "The response must be clear, structured, and follow the exact format below:\n\n" +
-                        "1. A simple explanation of the word's meaning written ONLY in Malay language (Bahasa Malaysia/Melayu). THE EXPLANATION MUST BE IN MALAY LANGUAGE, NOT IN CHINESE.\n"
+                        "1. A natural, clear explanation of the word's meaning written ONLY in Malay language (Bahasa Malaysia/Melayu). Write it as a complete sentence or paragraph explaining what the word means, how it's used, and in what contexts. Make the explanation informative and natural, NOT repetitive. THE EXPLANATION MUST BE IN MALAY LANGUAGE, NOT IN CHINESE.\n"
                         +
-                        "2. Three example sentences using this word in real context. Each should include:\n" +
-                        "   - The original sentence in Chinese\n" +
-                        "   - Its translation in Malay\n" +
-                        "3. State whether this word is an adjective in Chinese grammar (answer with YES or NO).\n\n" +
+                        "2. Provide the correct pinyin (Mandarin romanization) for the word.\n"
+                        +
+                        "3. Three example sentences using this word in real context. Each example should include:\n" +
+                        "   - A number (1., 2., 3.) followed by the Chinese sentence\n" +
+                        "   - The Malay translation on the next line\n" +
+                        "   Make sure the examples are natural, practical, and demonstrate the word in different realistic contexts.\n"
+                        +
+                        "4. State whether this word is an adjective in Chinese grammar (answer with YES or NO).\n\n" +
                         "Use the following EXACT section headers in your response:\n\n" +
-                        "EXPLANATION:\n[your simple explanation written ONLY in Bahasa Malaysia/Melayu, not in Chinese or any other language]\n\n"
+                        "EXPLANATION:\n" +
+                        "[Write a natural, informative explanation in Malay about what this Chinese word means, how it's used, and when it applies. For example: '新鲜 (xīn xiān) bermaksud sesuatu yang segar, baru, atau masih dalam keadaan baik. Ia menggambarkan makanan yang tidak basi, udara yang sejuk dan nyaman, atau idea yang baru dan kreatif.' Do NOT repeat the same word twice.]\n\n"
+                        +
+                        "PINYIN:\n[Romanized pinyin]\n\n"
                         +
                         "EXAMPLES:\n" +
-                        "1. [Chinese sentence]\n   [Malay translation]\n" +
-                        "2. [Chinese sentence]\n   [Malay translation]\n" +
-                        "3. [Chinese sentence]\n   [Malay translation]\n\n" +
+                        "1. [Chinese sentence]\n" +
+                        "[Malay translation]\n" +
+                        "\n" +
+                        "2. [Chinese sentence]\n" +
+                        "[Malay translation]\n" +
+                        "\n" +
+                        "3. [Chinese sentence]\n" +
+                        "[Malay translation]\n\n" +
                         "IS_ADJECTIVE:\n[YES or NO]",
                 language, word, additionalContext);
     }
@@ -263,10 +285,21 @@ public class DeepseekAiService {
 
                 // Try direct extraction with a new approach
                 if (!sections.containsKey("EXPLANATION")) {
-                    String explanation = extractWithRegex(text, "EXPLANATION:", "EXAMPLES:");
+                    String explanation = extractWithRegex(text, "EXPLANATION:", "PINYIN:");
+                    if (explanation == null) {
+                        explanation = extractWithRegex(text, "EXPLANATION:", "EXAMPLES:");
+                    }
                     if (explanation != null) {
                         sections.put("EXPLANATION", explanation);
                         logger.debug("Extracted EXPLANATION with regex: {} chars", explanation.length());
+                    }
+                }
+
+                if (!sections.containsKey("PINYIN")) {
+                    String pinyin = extractWithRegex(text, "PINYIN:", "EXAMPLES:");
+                    if (pinyin != null) {
+                        sections.put("PINYIN", pinyin);
+                        logger.debug("Extracted PINYIN with regex: {}", pinyin);
                     }
                 }
 
@@ -291,12 +324,21 @@ public class DeepseekAiService {
             response.setExplanation(
                     cleanUpFormatting(sections.getOrDefault("EXPLANATION", "No explanation available.")));
             
-            // Use PinyinService for accurate pinyin instead of extracting from AI response
-            String pinyin = pinyinService.getPinyin(word);
-            response.setPronunciation(pinyin);
-            logger.debug("Using pinyin from PinyinService for '{}': {}", word, pinyin);
+            // Use pinyin from AI response if available, otherwise fall back to PinyinService
+            String pinyinFromAi = sections.get("PINYIN");
+            if (pinyinFromAi != null && !pinyinFromAi.isEmpty()) {
+                String cleanedPinyin = cleanUpFormatting(pinyinFromAi);
+                response.setPronunciation(cleanedPinyin);
+                logger.debug("Using pinyin from AI for '{}': {}", word, cleanedPinyin);
+            } else {
+                String pinyin = pinyinService.getPinyin(word);
+                response.setPronunciation(pinyin);
+                logger.debug("Using pinyin from PinyinService for '{}': {}", word, pinyin);
+            }
             
-            response.setExamples(cleanUpFormatting(sections.getOrDefault("EXAMPLES", "No examples available.")));
+            String examplesText = cleanUpFormatting(sections.getOrDefault("EXAMPLES", "No examples available."));
+            examplesText = removeNumberingFromExamples(examplesText);
+            response.setExamples(examplesText);
 
             // Handle adjective field
             String isAdjectiveText = sections.getOrDefault("IS_ADJECTIVE", "NO").trim().toUpperCase();
@@ -405,9 +447,44 @@ public class DeepseekAiService {
         return text;
     }
 
+    /**
+     * Removes numbering and labels from examples text
+     * Converts "1. Chinese sentence\nMalay translation" to "Chinese sentence\nMalay translation"
+     * Also handles formats like "1." "2." "a." "a)" etc.
+     * 
+     * @param examples The examples text potentially containing numbering
+     * @return Cleaned examples without numbering
+     */
+    private String removeNumberingFromExamples(String examples) {
+        if (examples == null || examples.isEmpty()) {
+            return examples;
+        }
+
+        logger.info("Removing numbering from examples. Input length: {}", examples.length());
+        logger.debug("Before cleaning: {}", examples.substring(0, Math.min(100, examples.length())));
+
+        // First, remove all leading numbering/lettering patterns that appear at the start of content
+        // This handles: "1. ", "1) ", "a. ", "a) ", etc.
+        String cleaned = examples.replaceAll("(?m)^\\s*\\d+[.)\\s]+", "");  // Remove numbered prefixes
+        cleaned = cleaned.replaceAll("(?m)^\\s*[a-zA-Z][.)\\s]+", "");  // Remove lettered prefixes
+        
+        // Also handle cases like "1. \n" or "2. \n" (number on its own line)
+        cleaned = cleaned.replaceAll("(?m)^\\s*\\d+\\s*[.)]*\\s*$", "");  // Remove standalone numbers
+        
+        // Remove extra blank lines while preserving the structure
+        cleaned = cleaned.replaceAll("\n{3,}", "\n\n");
+        
+        // Clean up trailing/leading whitespace
+        String result = cleaned.trim();
+        logger.debug("After cleaning: {}", result.substring(0, Math.min(100, result.length())));
+        logger.info("Numbering removal complete. Output length: {}", result.length());
+        
+        return result;
+    }
+
     private Map<String, String> extractSections(String text) {
         Map<String, String> sections = new HashMap<>();
-        String[] sectionHeaders = { "EXPLANATION:", "EXAMPLES:", "IS_ADJECTIVE:" };
+        String[] sectionHeaders = { "EXPLANATION:", "PINYIN:", "EXAMPLES:", "IS_ADJECTIVE:" };
 
         // First, normalize line endings and remove any <think> blocks
         text = text.replaceAll("(?s)<think>.*?</think>", "").trim();
