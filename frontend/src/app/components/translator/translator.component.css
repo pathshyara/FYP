@@ -913,6 +913,16 @@
   .btn-primary {
     font-size: 1.1rem;
     padding: 16px;
+    position: sticky;
+    bottom: 20px;
+    margin-top: 20px;
+    z-index: 100;
+    box-shadow: 0 6px 20px rgba(211, 47, 47, 0.5);
+  }
+  
+  /* Ensure translate button is always visible on mobile */
+  .translation-box .btn-primary {
+    margin-bottom: 15px;
   }
 }
 

@@ -19,15 +19,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         // Enable CORS for all endpoints to allow frontend communication
         registry.addMapping("/api/**")
-                .allowedOrigins(
-                    "http://localhost:4200", 
-                    "http://localhost:3000", 
-                    "http://127.0.0.1:4200",
-                    "https://ekamus-sifat.vercel.app",
-                    "https://ekamus-sifat-jft0hd2se-saras-projects-6b738aaa.vercel.app"
+                .allowedOriginPatterns(
+                    "http://localhost:*", 
+                    "http://127.0.0.1:*",
+                    "https://*.vercel.app"
                 )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
+                .allowCredentials(true)
                 .maxAge(3600);
     }
 }
