@@ -1,0 +1,318 @@
+<div class="translator-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>E-Kamus Kata Sifat Bahasa Melayu-Mandarin</h1>
+    <p class="subtitle">Translate between Malay and Mandarin Chinese Adjective</p>
+  </div>
+
+  <!-- Main Translation Box -->
+  <div class="translation-box">
+    <!-- Language Selection Row -->
+    <div class="language-row">
+      <div class="language-select">
+        <label for="source-lang">From</label>
+        <select 
+          id="source-lang" 
+          [(ngModel)]="sourceLang" 
+          class="lang-dropdown">
+          @for (lang of languages; track lang.code) {
+            <option [value]="lang.code">{{ lang.name }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Swap Button -->
+      <button 
+        class="swap-button" 
+        (click)="swapLanguages()" 
+        title="Swap languages"
+        aria-label="Swap source and target languages">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/>
+        </svg>
+      </button>
+
+      <div class="language-select">
+        <label for="target-lang">To</label>
+        <select 
+          id="target-lang" 
+          [(ngModel)]="targetLang" 
+          class="lang-dropdown">
+          @for (lang of languages; track lang.code) {
+            <option [value]="lang.code">{{ lang.name }}</option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <!-- Text Input/Output Area -->
+    <div class="text-area-container">
+      <!-- Source Text Area -->
+      <div class="text-section">
+        <div class="text-header">
+          <h3>Source Text</h3>
+          <span class="character-count">{{ sourceText().length }}/5000</span>
+        </div>
+        <textarea
+          class="text-input"
+          [(ngModel)]="sourceText"
+          placeholder="Enter text to translate..."
+          maxlength="5000"
+          (keyup.enter)="sourceText().length > 0 && translate()">
+        </textarea>
+        <div class="text-actions">
+          <button 
+            class="btn-secondary" 
+            (click)="clearAll()" 
+            [disabled]="!sourceText() && !translatedText()">
+            Clear
+          </button>
+          <button 
+            class="btn-secondary" 
+            (click)="copyToClipboard(sourceText())" 
+            [disabled]="!sourceText()"
+            title="Copy source text">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+              <rect x="8" y="2" width="8" height="4" rx="1"/>
+            </svg>
+            Copy
+          </button>
+        </div>
+      </div>
+
+      <!-- Target Text Area -->
+      <div class="text-section">
+        <div class="text-header">
+          <h3>Translation</h3>
+          <span class="character-count">{{ translatedText().length }}</span>
+        </div>
+        <div class="text-output">
+          @if (isLoading()) {
+            <div class="loading">
+              <div class="spinner"></div>
+              <p>Translating...</p>
+            </div>
+          } @else if (translatedText()) {
+            <p>{{ translatedText() }}</p>
+          } @else {
+            <p class="placeholder">Translation will appear here...</p>
+          }
+        </div>
+        <div class="text-actions">
+          <button 
+            class="btn-secondary" 
+            (click)="copyToClipboard(translatedText())" 
+            [disabled]="!translatedText()"
+            title="Copy translated text">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+              <rect x="8" y="2" width="8" height="4" rx="1"/>
+            </svg>
+            Copy
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Translate Button -->
+    <button 
+      class="btn-primary" 
+      (click)="translate()"
+      [disabled]="!sourceText() || isLoading()">
+      @if (isLoading()) {
+        <span>Translating...</span>
+      } @else {
+        <span>Translate</span>
+      }
+    </button>
+
+    <!-- Error Message -->
+    @if (error()) {
+      <div class="error-message">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v4m0 4v.01" fill="white" stroke="white" stroke-width="2"/>
+        </svg>
+        {{ error() }}
+      </div>
+    }
+  </div>
+
+  <!-- Additional Features Section -->
+  <div class="features-section">
+    <h2>Features</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <!-- Custom Dictionary Icon with cultural colors -->
+          <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="10" width="60" height="80" rx="4" fill="#FFD700" stroke="#D32F2F" stroke-width="3"/>
+            <rect x="25" y="15" width="50" height="70" rx="2" fill="#FFF"/>
+            <line x1="30" y1="25" x2="70" y2="25" stroke="#D32F2F" stroke-width="3" stroke-linecap="round"/>
+            <line x1="30" y1="35" x2="65" y2="35" stroke="#00897B" stroke-width="2" stroke-linecap="round"/>
+            <line x1="30" y1="42" x2="65" y2="42" stroke="#00897B" stroke-width="2" stroke-linecap="round"/>
+            <line x1="30" y1="52" x2="70" y2="52" stroke="#D32F2F" stroke-width="3" stroke-linecap="round"/>
+            <line x1="30" y1="62" x2="65" y2="62" stroke="#00897B" stroke-width="2" stroke-linecap="round"/>
+            <line x1="30" y1="69" x2="65" y2="69" stroke="#00897B" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="85" cy="85" r="12" fill="#FFD700"/>
+            <text x="85" y="92" font-size="18" text-anchor="middle" fill="#D32F2F" font-weight="bold">A</text>
+          </svg>
+        </div>
+        <h3>Dictionary Lookup</h3>
+        <p>Look up words in our comprehensive dictionary</p>
+        <button 
+          class="btn-feature" 
+          (click)="lookupDictionary()"
+          [disabled]="!sourceText() || isLoading()">
+          Look Up Word
+        </button>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <!-- Custom Swap Icon with rotation arrows -->
+          <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="30" r="18" fill="#D32F2F" opacity="0.9"/>
+            <text x="30" y="38" font-size="20" text-anchor="middle" fill="white" font-weight="bold">M</text>
+            <circle cx="70" cy="70" r="18" fill="#00897B" opacity="0.9"/>
+            <text x="70" y="78" font-size="20" text-anchor="middle" fill="white" font-weight="bold">中</text>
+            <path d="M 45 25 Q 60 15 75 25" stroke="#FFD700" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M 75 25 L 70 20 M 75 25 L 70 30" stroke="#FFD700" stroke-width="4" stroke-linecap="round"/>
+            <path d="M 55 75 Q 40 85 25 75" stroke="#FFD700" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M 25 75 L 30 70 M 25 75 L 30 80" stroke="#FFD700" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Quick Swap</h3>
+        <p>Instantly swap source and target languages</p>
+        <button class="btn-feature" (click)="swapLanguages()">
+          Swap Languages
+        </button>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">
+          <!-- Custom Copy Icon with clipboard -->
+          <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="15" y="25" width="50" height="65" rx="4" fill="#00897B" opacity="0.9"/>
+            <rect x="20" y="30" width="40" height="55" rx="2" fill="white"/>
+            <rect x="30" y="15" width="20" height="10" rx="3" fill="#FFD700"/>
+            <line x1="25" y1="40" x2="55" y2="40" stroke="#D32F2F" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="25" y1="50" x2="55" y2="50" stroke="#00897B" stroke-width="2" stroke-linecap="round"/>
+            <line x1="25" y1="58" x2="50" y2="58" stroke="#00897B" stroke-width="2" stroke-linecap="round"/>
+            <line x1="25" y1="66" x2="55" y2="66" stroke="#00897B" stroke-width="2" stroke-linecap="round"/>
+            <rect x="35" y="35" width="50" height="65" rx="4" fill="#D32F2F" opacity="0.8"/>
+            <rect x="40" y="40" width="40" height="55" rx="2" fill="white"/>
+            <rect x="50" y="25" width="20" height="10" rx="3" fill="#FFD700"/>
+            <line x1="45" y1="50" x2="75" y2="50" stroke="#D32F2F" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="45" y1="60" x2="75" y2="60" stroke="#00897B" stroke-width="2" stroke-linecap="round"/>
+            <line x1="45" y1="68" x2="70" y2="68" stroke="#00897B" stroke-width="2" stroke-linecap="round"/>
+            <line x1="45" y1="76" x2="75" y2="76" stroke="#00897B" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Easy Copy</h3>
+        <p>Copy translations to clipboard with one click</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dictionary Modal -->
+  @if (showDictionary() && dictionaryResult()) {
+    <div class="modal-overlay" (click)="closeDictionary()">
+      <div class="modal-content dictionary-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Dictionary Entry</h2>
+          <div class="modal-actions">
+            <button 
+              class="swap-btn-modal"
+              (click)="swapDictionaryLookup()"
+              title="Swap lookup language"
+              aria-label="Swap lookup direction">
+              🔄
+            </button>
+            <button class="close-btn" (click)="closeDictionary()">✕</button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="dictionary-entry">
+            <!-- Word Headers -->
+            <div class="word-headers">
+              @if (dictionaryLookupFromMalay()) {
+                <!-- Show Malay first (left/blue) when looked up from Malay -->
+                @if (dictionaryResult().malayWord) {
+                  <div class="word-section malay-first">
+                    <h3 class="word-title">{{ dictionaryResult().malayWord }}</h3>
+                    <span class="language-badge malay">Malay</span>
+                  </div>
+                }
+                @if (dictionaryResult().mandarinWord) {
+                  <div class="word-section mandarin-second">
+                    <h3 class="word-title mandarin">{{ dictionaryResult().mandarinWord }}</h3>
+                    <span class="language-badge chinese">Chinese</span>
+                  </div>
+                }
+              } @else {
+                <!-- Show Chinese first (left/purple) when looked up from Chinese -->
+                @if (dictionaryResult().mandarinWord) {
+                  <div class="word-section mandarin-first">
+                    <h3 class="word-title mandarin">{{ dictionaryResult().mandarinWord }}</h3>
+                    <span class="language-badge chinese">Chinese</span>
+                  </div>
+                }
+                @if (dictionaryResult().malayWord) {
+                  <div class="word-section malay-second">
+                    <h3 class="word-title">{{ dictionaryResult().malayWord }}</h3>
+                    <span class="language-badge malay">Malay</span>
+                  </div>
+                }
+              }
+            </div>
+
+            <!-- Pronunciation -->
+            @if (dictionaryResult().pinyin) {
+              <div class="detail-section pronunciation">
+                <h4 class="section-title">PRONUNCIATION:</h4>
+                <p class="pinyin-text">{{ dictionaryResult().pinyin }}</p>
+              </div>
+            }
+
+            <!-- Explanation -->
+            @if (dictionaryResult().explanation) {
+              <div class="detail-section explanation">
+                <h4 class="section-title">EXPLANATION:</h4>
+                <p class="explanation-text">{{ dictionaryResult().explanation }}</p>
+              </div>
+            }
+
+            <!-- Word Type -->
+            <div class="detail-section word-type">
+              <h4 class="section-title">IS_ADJECTIVE:</h4>
+              <p class="word-type-badge" [class.adjective]="dictionaryResult().adjective">
+                {{ dictionaryResult().adjective ? 'YES' : 'NO' }}
+              </p>
+            </div>
+
+            <!-- Examples -->
+            @if (dictionaryResult().examples) {
+              <div class="detail-section examples">
+                <h4 class="section-title">EXAMPLES:</h4>
+                <div class="examples-list">
+                  @for (example of parseExamples(dictionaryResult().examples); track $index) {
+                    <div class="example-item">
+                      <div class="example-text">
+                        @if (example.chinese) {
+                          <p class="example-chinese">{{ example.chinese }}</p>
+                        }
+                        <p class="example-malay">{{ example.malay }}</p>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
