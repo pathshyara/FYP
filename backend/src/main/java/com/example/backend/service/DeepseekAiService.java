@@ -230,31 +230,31 @@ public class DeepseekAiService {
                         +
                         "Please provide a comprehensive explanation of the %s word '%s'. %s\n" +
                         "The response must be clear, structured, and follow the exact format below:\n\n" +
-                        "1. A natural, clear explanation of the word's meaning written ONLY in Malay language (Bahasa Malaysia/Melayu). Write it as a complete sentence or paragraph explaining what the word means, how it's used, and in what contexts. Make the explanation informative and natural, NOT repetitive. THE EXPLANATION MUST BE IN MALAY LANGUAGE, NOT IN CHINESE.\n"
+                        "1. A natural, clear, and CONCISE explanation of the word's meaning written ONLY in Malay language (Bahasa Malaysia/Melayu). Keep it brief and to the point - explain what the word means and when it's used. Make the explanation informative and natural, NOT repetitive. THE EXPLANATION MUST BE IN MALAY LANGUAGE, NOT IN CHINESE.\n"
                         +
                         "2. Provide the correct pinyin (Mandarin romanization) for the word.\n"
                         +
                         "3. Three example sentences using this word in real context. Each example should include:\n" +
                         "   - A number (1., 2., 3.) followed by the Chinese sentence\n" +
                         "   - The Malay translation on the next line\n" +
-                        "   Make sure the examples are natural, practical, and demonstrate the word in different realistic contexts.\n"
+                        "   IMPORTANT: Use correct standard Malay spelling. Common words: 'kuih' (not 'kueh'), 'sedap' (not 'lezat'), 'sangat' (not 'amat'). Make sure the examples are natural, practical, and demonstrate the word in different realistic contexts.\n"
                         +
                         "4. State whether this word is an adjective in Chinese grammar (answer with YES or NO).\n\n" +
                         "Use the following EXACT section headers in your response:\n\n" +
                         "EXPLANATION:\n" +
-                        "[Write a natural, informative explanation in Malay about what this Chinese word means, how it's used, and when it applies. For example: '新鲜 (xīn xiān) bermaksud sesuatu yang segar, baru, atau masih dalam keadaan baik. Ia menggambarkan makanan yang tidak basi, udara yang sejuk dan nyaman, atau idea yang baru dan kreatif.' Do NOT repeat the same word twice.]\n\n"
+                        "[Write a natural, CONCISE explanation in Malay (2-3 sentences maximum) about what this Chinese word means and when it's used. Keep it simple and clear.]\n\n"
                         +
                         "PINYIN:\n[Romanized pinyin]\n\n"
                         +
                         "EXAMPLES:\n" +
                         "1. [Chinese sentence]\n" +
-                        "[Malay translation]\n" +
+                        "[Malay translation with correct spelling]\n" +
                         "\n" +
                         "2. [Chinese sentence]\n" +
-                        "[Malay translation]\n" +
+                        "[Malay translation with correct spelling]\n" +
                         "\n" +
                         "3. [Chinese sentence]\n" +
-                        "[Malay translation]\n\n" +
+                        "[Malay translation with correct spelling]\n\n" +
                         "IS_ADJECTIVE:\n[YES or NO]",
                 language, word, additionalContext);
     }
