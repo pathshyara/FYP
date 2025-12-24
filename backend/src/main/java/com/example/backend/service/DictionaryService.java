@@ -138,14 +138,21 @@ public class DictionaryService {
         return result.onErrorResume(e -> {
             System.err.println("Error processing word: " + malayWord + ", error: " + e.getMessage());
 
-            // Create an error response instead of throwing an exception
+            // Check if we have a fallback entry for this word
+            if (dictionaryEntryService.hasFallbackEntry(malayWord)) {
+                System.out.println("Using fallback entry for: " + malayWord);
+                DictionaryEntryService.DictionaryEntry fallbackEntry = dictionaryEntryService.getFallbackEntry(malayWord);
+                return Mono.just(dictionaryEntryService.convertToDictionaryResponse(fallbackEntry, false));
+            }
+
+            // Create an error response
             DictionaryResponse errorResponse = new DictionaryResponse();
             errorResponse.setMalayWord(malayWord);
-            errorResponse.setMandarinWord("Translation failed");
+            errorResponse.setMandarinWord("Error");
             errorResponse.setExplanation(
-                    "Unable to translate this word. LibreTranslate API error: " + e.getMessage());
+                    "Dictionary service temporarily unavailable. Please try again later.");
             errorResponse.setExamples("No examples available");
-            errorResponse.setPinyin("No pronunciation available");
+            errorResponse.setPinyin("Unavailable");
             errorResponse.setAdjective(false);
 
             return Mono.just(errorResponse);
