@@ -194,9 +194,13 @@ export class TranslatorComponent implements OnInit {
     // If we have pairs of lines (every 2 lines = 1 example), treat as Chinese/Malay pairs
     if (lines.length % 2 === 0 && lines.length >= 2) {
       for (let i = 0; i < lines.length; i += 2) {
+        // Remove any leading numbers from the text
+        const chinesePart = lines[i].trim().replace(/^\d+\.\s*/, '');
+        const malayPart = lines[i + 1].trim().replace(/^\d+\.\s*/, '');
+        
         examples.push({
-          chinese: lines[i].trim(),
-          malay: lines[i + 1].trim()
+          chinese: chinesePart,
+          malay: malayPart
         });
       }
       return examples;
